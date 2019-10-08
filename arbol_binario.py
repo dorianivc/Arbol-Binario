@@ -278,19 +278,19 @@ class ArbolBinario:
             actual=actual.left
         while stack.empty() is False:
             izquierdo=stack.get()
-            print("IZQ: "+ izquierdo.valor) 
-            print("DER: "+ izquierdo.right.valor)
+            print( izquierdo.valor) 
+            print( izquierdo.right.valor)
             izquierdo=stack.get()
             derecho=izquierdo.right
-            print("IZQ: "+izquierdo.valor)
-            print("DER: "+ derecho.valor)
+            print(izquierdo.valor)
+            print( derecho.valor)
             izquierdo=stack.get()
-            print("IZQ: "+ izquierdo.valor)
-            print("DER: "+ izquierdo.right.left.valor)
-            print("DER: "+ izquierdo.right.valor)
-            print("DER: "+ izquierdo.right.right.left.valor)
-            print("DER: "+ izquierdo.right.right.valor)
-            print("DER: "+ izquierdo.right.right.right.valor)
+            print( izquierdo.valor)
+            print( izquierdo.right.left.valor)
+            print( izquierdo.right.valor)
+            print( izquierdo.right.right.left.valor)
+            print(izquierdo.right.right.valor)
+            print(izquierdo.right.right.right.valor)
 
             
 
