@@ -63,6 +63,21 @@ class ArbolBinario:
     def recorrido_por_nivel(self):
         self._orden_por_nivel(self.root)
 
+    # Imprime el recorrido del árbol por Niveles - Versión recursiva
+    def _orden_por_nivel(self, actual):
+        niveles = self._altura(actual) + 1
+        for i in range(1, niveles):
+            self._orden_por_nivel_recursivo(actual, i)
+
+    # Auxiliar para el recorrido del árbol en Level-Order
+    def _orden_por_nivel_recursivo(self, actual, nivel):
+        if actual is None:
+            return
+        if nivel == 1:
+            print(actual.valor + ' ')
+        else:
+            self._orden_por_nivel_recursivo(actual.left, nivel-1)
+            self._orden_por_nivel_recursivo(actual.right, nivel-1)
     # Imprime el recorrido del árbol en Level-Order (Breadth-first search) ITERATIVO
     # Utiliza la misma técnica que Insertar. Sin embargo, se recorren todos los nodos
     def recorrido_por_nivel_iterativo(self):
@@ -217,21 +232,17 @@ class ArbolBinario:
             self._pos_orden(actual.right)
             print(actual.valor + ' ')
 
-    # Imprime el recorrido del árbol por Niveles - Versión recursiva
-    def _orden_por_nivel(self, actual):
-        niveles = self._altura(actual) + 1
-        for i in range(1, niveles):
-            self._orden_por_nivel_recursivo(actual, i)
+  
 
     # Auxiliar para el recorrido del árbol en Level-Order
-    def _orden_por_nivel_recursivo(self, actual, nivel):
+    def recorrido_por_nivel_recursivo(self, actual, nivel):
         if actual is None:
             return
         if nivel == 1:
             print(actual.valor + ' ')
         else:
-            self._orden_por_nivel_recursivo(actual.left, nivel-1)
-            self._orden_por_nivel_recursivo(actual.right, nivel-1)
+            self.recorrido_por_nivel_recursivo(actual.left, nivel-1)
+            self.recorrido_por_nivel_recursivo(actual.right, nivel-1)
 
     # Retorna un apuntador al Nodo que contenga la llave
     # None si no encuentra la llave
@@ -291,17 +302,123 @@ class ArbolBinario:
             print( izquierdo.right.right.left.valor)
             print(izquierdo.right.right.valor)
             print(izquierdo.right.right.right.valor)
-
             
+    def pre_orden_iterativo(self,actual):
+        aux=actual
+        pila=queue.LifoQueue()
+        while True:
+            if aux is not None:
+                print(aux.valor)
+                pila.put(aux)
+                aux=aux.left
+            elif pila.empty() is not True:
+                aux=pila.get()
+                aux=aux.right
+            condicion=False
+            if(pila.empty==False and aux is not None):
+                condicion=True
+            if(condicion):
+                break
+        
+    def compararListas(self,NodoA, NodoB):
+        ListaA= list()
+        ListaB= list()
+        actual1=NodoA
+        actual2=NodoB
+        self.pos_orden_lista(actual1, ListaA)
+        self.pos_orden_lista(actual2, ListaB)
+        sizeA=len(ListaA)
+        sizeB=len(ListaB)
+        if(sizeA != sizeB):
+            return False
+        else:
+            for i in range(sizeA):
+                valorA=ListaA.pop()
+                valorB=ListaB.pop()
+                if(valorA!=valorB):
+                    return False
+            return True
 
-            
+    def espejo(self, entrante):
+        nodito=entrante
+        if nodito is None:
+            return
+        else:
+            tmp=nodito
+            self.espejo(nodito.left)
+            self.espejo(nodito.right)
+            tmp= nodito.left
+            nodito.left=nodito.right
+            nodito.right=tmp
+
+        arbol=ArbolBinario()
+        arbol.root=nodito
+        return arbol      
+
+    def esEspejo(self, NodoA, NodoB):
+        actual1=self.espejo(NodoA)
+        actual2=NodoB
+        salida=self.compararListas(actual1.root,actual2)
+        return salida
+
+    def nodo_mas_grande(self):
+        actual=self.root
+        lista=list()
+        self.pos_orden_lista(actual,lista)
+        size=len(lista)
+        if(size>0):
+            mayor=lista.pop()
+            size=len(lista)
+            for i in range(size):
+                aux=lista.pop()
+                if(aux.valor>mayor.valor):
+                    mayor=aux
+        return mayor        
+
+    def pos_orden_lista(self,actual, lista):
+       if actual is not None:
+            self.pos_orden_lista(actual.left,lista)
+            lista.append(actual)
+            self.pos_orden_lista(actual.right, lista)
+
+    def _hojas(self, actual, hojitas):
+        if actual is not None:
+            self._hojas(actual.left,hojitas)
+            if(actual.left is None and actual.right is None):
+                hojitas.append(actual)
+            self._hojas(actual.right,hojitas)
+
+    def hojas(self):
+        actual=self.root
+        hojitas=list()
+        self._hojas(actual, hojitas)
+        hojas=len(hojitas)
+        return hojas
+    def cuentaNodos(self):
+        lista=list()
+        actual=self.root
+        self.pos_orden_lista(actual,lista)
+        size=len(lista)
+        return size
+   
+    
 
 if __name__ == '__main__':
     arbolito=ArbolBinario()
     arbolito.crear_desde_archivo("arbolchar.txt")
-    print("Real: ")
-    arbolito.recorrido_en_orden()
-    print("Prototipo")
-    arbolito._InOrden_Iterativo()
+    print("Arbol Normal")
+    arbolito.recorrido_pos_orden()
+    print("--------------------")
+    espejo=arbolito.espejo(arbolito.root)
+    print("Arbol Espejo del Normal")
+    espejo.recorrido_pos_orden()
+    var=arbolito.esEspejo(arbolito.root, espejo.root)
+    if(var is True):
+        print("Son Espejos")
+    else:
+        print("No son Espejos")
+    print("Cantidad de Hojas: "+ espejo.hojas().__str__())
+    print("Cantidad de Nodos: "+ espejo.cuentaNodos().__str__())
+    print("Nodo mas Grande: " + espejo.nodo_mas_grande().valor)
 
-
+ 
